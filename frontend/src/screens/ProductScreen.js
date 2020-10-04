@@ -17,7 +17,8 @@ const ProductScreen = ({ match }) => {
     };
 
     fetchProduct();
-  }, []);
+    //add dependencies in [] as 2nd parameter of useEffect
+  }, [match]); // add match to useEffect dependency to prevent warning
 
   return (
     <>
