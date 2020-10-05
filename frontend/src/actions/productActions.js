@@ -5,7 +5,7 @@ import {
   PRODUCT_LIST_FAIL,
 } from "../constants/productConstance";
 
-export const listProducts = () => async () => {
+export const listProducts = () => async (dispatch) => {
   try {
     // global state is set to loading
     dispatch({ type: PRODUCT_LIST_REQUEST });
