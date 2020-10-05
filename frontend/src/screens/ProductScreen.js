@@ -18,7 +18,7 @@ import { listProductDetails } from "../actions/productActions";
 
 // match props from react router to match /:id param defined in Route component
 const ProductScreen = ({ history, match }) => {
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1);
 
   const dispatch = useDispatch();
 
