@@ -1,5 +1,9 @@
 import axios from "axios";
-import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstants";
+import {
+  CART_ADD_ITEM,
+  CART_REMOVE_ITEM,
+  CART_SAVE_SHIPPING_ADDRESS,
+} from "../constants/cartConstants";
 
 // getState -> get current global state
 export const addToCart = (id, qty) => async (dispatch, getState) => {
@@ -27,4 +31,12 @@ export const removeFromCart = (id) => async (dispatch, getState) => {
 
   // update the localStorage with the new cartItem state
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+export const saveShippingAddress = (data) => async (dispatch) => {
+  // remove cart in gloabal state
+  dispatch({ type: CART_SAVE_SHIPPING_ADDRESS, payload: data });
+
+  // update the localStorage with the new cartItem state
+  localStorage.setItem("shippingAddress", JSON.stringify(data));
 };
