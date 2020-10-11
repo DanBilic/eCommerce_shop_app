@@ -3,6 +3,7 @@ import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_SAVE_SHIPPING_ADDRESS,
+  CART_SAVE_PAYMENT_METHOD,
 } from "../constants/cartConstants";
 
 // getState -> get current global state
@@ -39,4 +40,12 @@ export const saveShippingAddress = (data) => async (dispatch) => {
 
   // update the localStorage with the new cartItem state
   localStorage.setItem("shippingAddress", JSON.stringify(data));
+};
+
+export const savePaymentMethod = (data) => async (dispatch) => {
+  // remove cart in gloabal state
+  dispatch({ type: CART_SAVE_PAYMENT_METHOD, payload: data });
+
+  // update the localStorage with the new cartItem state
+  localStorage.setItem("paymentMethod", JSON.stringify(data));
 };
