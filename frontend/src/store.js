@@ -14,6 +14,8 @@ import {
   userUpdateProfileReducer,
 } from "./reducers/userReducers";
 
+import { orderCreateReducer } from "./reducers/orderReducers";
+
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -22,6 +24,7 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
+  orderCreate: orderCreateReducer,
 });
 
 // take cart items from local storage and set ist as initial state of the global state
