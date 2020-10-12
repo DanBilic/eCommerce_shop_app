@@ -96,7 +96,7 @@ export const payOrder = (orderId, paymentResult) => async (
       paymentResult,
       config
     );
-    console.log("GET ORDER DETAIL", data);
+    console.log("PAY ORDER", data);
 
     dispatch({
       type: ORDER_PAY_SUCCESS,

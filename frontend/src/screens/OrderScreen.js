@@ -1,13 +1,19 @@
+import axios from "axios";
+import { PayPalButton } from "react-paypal-button-v2";
 import React, { useEffect, useState } from "react";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, payOrder } from "../actions/orderActions";
+import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
+
+  const [sdkReady, setSdkReady] = useState(false);
+
   console.log("orderid", orderId);
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
@@ -15,7 +21,11 @@ const OrderScreen = ({ match }) => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
-  if (!loading) {
+  const orderPay = useSelector((state) => state.orderPay);
+  // rename loadign to loadingPay
+  const { loading: loadingPay, success: successPay } = orderPay;
+
+  if (!loading && order) {
     // calculate prices
     order.itemsPrice = order.orderItems.reduce(
       (acc, item) => acc + item.price * item.qty,
@@ -24,12 +34,42 @@ const OrderScreen = ({ match }) => {
   }
 
   useEffect(() => {
-    if (!order || order._id !== orderId) {
-      dispatch(getOrderDetails(orderId));
-    }
-  }, [order, orderId]);
+    const addPayPalScript = async () => {
+      const { data: clientId } = await axios.get("/api/config/paypal");
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+      document.body.appendChild(script);
+    };
 
-  console.log("CART", cart);
+    // addPayPalScript();
+
+    // wenn keine order oder Bezahlung erfolgreich
+    if (!order || successPay || order._id !== orderId) {
+      dispatch({ type: ORDER_PAY_RESET });
+      dispatch(getOrderDetails(orderId));
+      //oder wenn order noch nicht bezahlt
+    } else if (!order.isPaid) {
+      // dann wenn paypal script noch nicht existiert
+      if (!window.paypal) {
+        // dann paypal script hinzufügen
+        addPayPalScript();
+      } else {
+        // ansonsten gibt es paypal script und das script ist somit ready
+        setSdkReady(true);
+      }
+    }
+  }, [order, orderId, successPay, dispatch]);
+
+  const successPaymentHandler = (paymentResult) => {
+    console.log("paymentResult", paymentResult);
+    dispatch(payOrder(orderId, paymentResult));
+  };
+
   return loading ? (
     <Loader />
   ) : error ? (
@@ -69,7 +109,7 @@ const OrderScreen = ({ match }) => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant="success">{order.paidAt}</Message>
+                <Message variant="success">Paid on {order.paidAt}</Message>
               ) : (
                 <Message variant="danger">Not Paid</Message>
               )}
@@ -138,6 +178,19 @@ const OrderScreen = ({ match }) => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              {!order.isPaid && (
+                <ListGroup.Item>
+                  {loadingPay && <Loader />}
+                  {!sdkReady ? (
+                    <Loader />
+                  ) : (
+                    <PayPalButton
+                      amount={order.totalPrice}
+                      onSuccess={successPaymentHandler}
+                    />
+                  )}
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>
@@ -147,3 +200,6 @@ const OrderScreen = ({ match }) => {
 };
 
 export default OrderScreen;
+
+// if its not paid than <ListGroup ....
+// {!order.isPaid && <ListGroup.Item></ListGroup.Item>}
