@@ -29,7 +29,7 @@ const PaymentScreen = ({ history }) => {
       <h1>Payment Method</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group>
-          <Form.Label as="leggend">Select Method</Form.Label>
+          <Form.Label as="legend">Select Method</Form.Label>
 
           <Col>
             <Form.Check
@@ -38,7 +38,7 @@ const PaymentScreen = ({ history }) => {
               id="PayPal"
               name="paymentMethod"
               value="PayPal"
-              inChange={(e) => setPaymentMethod(e.target.value)}
+              onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
           </Col>
         </Form.Group>
