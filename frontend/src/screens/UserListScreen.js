@@ -52,7 +52,7 @@ const UserListScreen = ({ history }) => {
           <tbody>
             {users.map((user) => (
               <tr key={user._id}>
-                <td>{user.id}</td>
+                <td>{user._id}</td>
                 <td>{user.name}</td>
                 <td>
                   <a href={`mailto:${user.email}`}>{user.email}</a>
