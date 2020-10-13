@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +25,7 @@ const UserListScreen = ({ history }) => {
       history.push("/login");
     }
     // succcessDelete als dependency hinzufügen damit useEffect die userliste aktualisiert wenn der user gelöscht wurde
-  }, [dispatch, history, successDelete]);
+  }, [dispatch, history, successDelete, userInfo]);
 
   const deleteHandler = (id) => {
     // console.log("delete");
@@ -66,7 +65,7 @@ const UserListScreen = ({ history }) => {
                   )}
                 </td>
                 <td>
-                  <LinkContainer to={`/user/${user._id}/edit`}>
+                  <LinkContainer to={`/admin/user/${user._id}/edit`}>
                     <Button variant="light" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>

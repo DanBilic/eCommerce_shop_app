@@ -1,7 +1,7 @@
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import React, { useEffect, useState } from "react";
-import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Message from "../components/Message";
@@ -16,7 +16,7 @@ const OrderScreen = ({ match }) => {
 
   console.log("orderid", orderId);
   const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart);
+  // const cart = useSelector((state) => state.cart);
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
