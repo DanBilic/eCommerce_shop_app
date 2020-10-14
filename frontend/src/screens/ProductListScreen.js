@@ -4,13 +4,20 @@ import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { listProducts } from "../actions/productActions";
+import { listProducts, deleteProduct } from "../actions/productActions";
 
 const ProductListScreen = ({ history, match }) => {
   const dispatch = useDispatch();
 
   const productList = useSelector((state) => state.productList);
   const { error, loading, products } = productList;
+
+  const productDelete = useSelector((state) => state.productDelete);
+  const {
+    error: errorDelete,
+    loading: loadingDelete,
+    success: successDelete,
+  } = productDelete;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -22,12 +29,13 @@ const ProductListScreen = ({ history, match }) => {
       history.push("/login");
     }
     // succcessDelete als dependency hinzufügen damit useEffect die userliste aktualisiert wenn der user gelöscht wurde
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, history, userInfo, successDelete]);
 
   const deleteHandler = (id) => {
     // console.log("delete");
     if (window.confirm("Are you sure?")) {
-      //delete products
+      //delete product
+      dispatch(deleteProduct(id));
     }
   };
 
@@ -47,6 +55,8 @@ const ProductListScreen = ({ history, match }) => {
           </Button>
         </Col>
       </Row>
+      {loadingDelete && <Loader />}
+      {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
