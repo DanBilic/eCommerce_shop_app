@@ -19,12 +19,12 @@ import {
   PRODUCT_UPDATE_RESET,
 } from "../constants/productConstance";
 
-export const listProducts = () => async (dispatch) => {
+export const listProducts = (keyword = "") => async (dispatch) => {
   try {
     // global state is set to loading
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
-    const { data } = await axios.get("/api/products");
+    const { data } = await axios.get(`/api/products?keyword=${keyword}`);
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
